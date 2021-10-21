@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.html import format_html
 
-from press.models import CoolUser, Category, Post
+from models import CoolUser, Category, Post
 
 
 class CoolUserInline(admin.StackedInline):
