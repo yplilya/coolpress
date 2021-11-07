@@ -33,6 +33,19 @@ def get_html_from_post(post):
     </html>
     '''
 
+def get_html_from_category(category):
+    return f'''
+    <html>
+    <body>
+    <h1>The asked post id {category.id}</h1> 
+    <ul>
+    <li>{category.slug}</li>
+    <li>{category.label}</li>
+    </ul>
+    </body>
+    </html>
+    '''
+
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
@@ -83,7 +96,6 @@ class CategoryDetail(DetailView):
         context['stats'] = stats
         return context
 
-
 class CategoryList(ListView):
     model = Category
 
@@ -96,7 +108,6 @@ class CategoryAdd(CreateView):
 class CategoryUpdate(UpdateView):
     model = Category
     form_class = CategoryForm
-
 
 class PostList(ListView):
     model = Post
@@ -126,13 +137,14 @@ class PostFilteredByText(PostList):
         context['search_data'] = self.request.GET.get('q')
         return context
 
+
 def post_filtered_by_text(request):
     search_text = request.GET.get('q')
     qs1 = Q(title__icontains=search_text)
     qs2 = Q(body__icontains=search_text)
     qs3 = Q(author__user__username__icontains=search_text)
     qs4 = Q(category__label__eq=search_text)
-    posts_list = Post.objects.filter(qs1 | qs2 | qs3| qs4)
+    posts_list = Post.objects.filter(qs1 | qs2 | qs3 | qs4)
     stats = extract_stats_from_posts(post_list)
     return render(request, 'posts_list.html', {'post_list': posts_list, 'stats': stats})
 
@@ -155,9 +167,9 @@ def search_ajax(request):
     )
 
 
-class CooluserDetail(DetailView):
+class CoolUserDetail(DetailView):
     model = CoolUser
 
 
-class CooluserList(ListView):
+class CoolUserList(ListView):
     model = CoolUser

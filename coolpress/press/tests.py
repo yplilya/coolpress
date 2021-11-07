@@ -7,7 +7,7 @@ from django.test import TestCase, Client
 # Create your tests here.
 from django.urls import reverse
 
-from press.mediastack_manager import insert_post_from_mediastack
+from press.mediastack_manager import insert_post_from_mediastack, gather_and_create_news
 from press.models import Category, CoolUser, Post
 from press.stats_manager import StatsDict, extract_stats_from_single_post, extract_stats_from_posts
 from press.user_management import get_gravatar_link, extract_github_repositories
@@ -20,6 +20,18 @@ class PostModelTest(TestCase):
         cls.cu = CoolUser.objects.create(user=cls.u)
         cls.cat = Category.objects.create(slug='random', label='Some random news')
         cls.p = Post.objects.create(category=cls.cat, author=cls.cu)
+
+    def test_categories_equal_context(self):
+        client = Client()
+        url = reverse('posts-detail', kwargs={'post_id': self.p.pk})
+        response = client.get(url)
+        self.assertCountEqual(response.context['categories'].count(), Category.objects.all().count())
+
+    def test_post_not_exist(self):
+        client = Client()
+        url = reverse('post-detail', kwargs={'post_id': 666666})
+        response = client.get(url)
+        self.assertEqual(response.status_code, 404)
 
     def test_sample_post(self):
         self.assertEqual(self.cu.pk, 1)
@@ -39,6 +51,7 @@ class PostModelTest(TestCase):
         url = reverse('posts-detail', kwargs={'post_id': 10})
         response = client.get(url)
         self.assertEqual(response.status_code, 404)
+
 
 
 class CreatePostUsingForm(TestCase):
@@ -361,9 +374,9 @@ class MediaStackManager(TestCase):
     def test_get_mediastack_sport_posts(self):
         categories = ['sports', 'health']
         languages = ['en']
-        limit = 10
+        limit = 20
         posts_created = gather_and_create_news(categories, languages, limit)
-        self.assertEqual(len(posts_created), 10)
+        self.assertEqual(len(posts_created), limit)
 
-        posts_created = gather_and_create_news(categories, languages, limit)
-        self.assertEqual(len(posts_created), 0)
+        posts_created_twice = gather_and_create_news(categories, languages, limit)
+        self.assertLess(len(posts_created_twice), limit)

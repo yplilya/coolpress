@@ -16,7 +16,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Cates
+                    Categories
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                     {% for category in categories %}
@@ -41,6 +41,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navUser">
                     <a class="btn btn-danger" href="{% url 'logout' %}">Log Out</a>
+                    <a class="btn btn-info new-post-btn" role="button" target='_blank' href="{% url 'post-add' %}">New Post</a>
                 </div>
             </li>
             {% else %}
