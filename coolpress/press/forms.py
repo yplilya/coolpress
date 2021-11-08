@@ -24,3 +24,4 @@ class CategoryForm(ModelForm):
             'slug': TextInput(attrs={'class': 'form-control'}),
             'label': TextInput(attrs={'class': 'form-control'}),
         }
+        

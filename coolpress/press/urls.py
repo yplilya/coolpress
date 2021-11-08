@@ -19,5 +19,5 @@ urlpatterns = [
     path('users/', views.CoolUserList.as_view(), name='cooluser-list'),
     path('posts-filtered/', views.search_ajax, name='search-ajax'),
     path('post-filtered/', views.PostFilteredByText.as_view(), name='post-filtered'),
-    #path('post-filtered/', views.PostFilteredByText.as_view(), name='post-filtered'),
+    path('posts-by-author/<int:cool_user_id>', views.PostListByAuthor.as_view(), name='author-posts'),
 ]

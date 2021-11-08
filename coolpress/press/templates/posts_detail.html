@@ -18,6 +18,10 @@
 {% endif %}
 <p class="post-detail-body text-center">{{post_obj.body|urlize}}</p>
 
+<div class="text-center">
+    <a class="btn btn-primary" target='_blank' href="{% url 'author-posts' post_obj.author.id %}">Other posts of {{post_obj.author.user.username}}</a>
+</div>
+
 {% if post_obj.source_link and post_obj.source_label %}
 <div class="text-center">
     <a class="btn btn-info " role="button" target='_blank' href="{{post_obj.source_link}}">Check

@@ -115,11 +115,6 @@ class PostList(ListView):
     context_object_name = 'post_list'
     template_name = 'posts_list.html'
 
-    def get_queryset(self):
-        queryset = super(PostList, self).get_queryset()
-        category_slug = self.kwargs['category_slug']
-        category = get_object_or_404(Category, slug=category_slug)
-        return queryset.filter(category=category)
 
 
 class PostFilteredByText(PostList):
@@ -149,6 +144,7 @@ def post_filtered_by_text(request):
     return render(request, 'posts_list.html', {'post_list': posts_list, 'stats': stats})
 
 
+
 def category_api(request, slug):
     cat = get_object_or_404(Category, slug=slug)
     return JsonResponse(
@@ -173,3 +169,9 @@ class CoolUserDetail(DetailView):
 
 class CoolUserList(ListView):
     model = CoolUser
+
+class PostListByAuthor(PostList):
+    def get_queryset(self):
+        queryset = super(PostListByAuthor, self).get_queryset()
+        author = get_object_or_404(CoolUser, id=self.kwargs['cool_user_id'])
+        return queryset.filter(author=author)
